@@ -1,14 +1,17 @@
 .bb-blue-background {
-  background: #162c65;
+  background: #E2E2E2;
 }
 .bb-green-background {
   background: #006a38;
 }
-.log-day-header h2 {
-  color: white;
+.log-day-header,
+h2 {
+  color: black;
 }
-.log-day,
 .log-header {
+  color: black;
+}
+.log-day {
   color: white;
 }
 .weather-icon {
@@ -68,7 +71,7 @@ body {
   /* Prevent scroll on narrow devices */
 }
 body {
-  padding-top: 70px;
+  padding-top: 51px;
 }
 footer {
   padding: 30px 0;
@@ -137,5 +140,10 @@ footer {
 @media (max-width: 767px) {
   .navbar-nav .open .dropdown-menu .nav-submenu {
     background: grey;
+  }
+}
+@media (min-width: 768px) {
+  .container {
+    width: auto;
   }
 }

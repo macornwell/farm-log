@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from core.models import Feedback
 from core.forms import FeedbackForm
+from observations.models import Observation
 
 
 def get_add_model_form(request, templatePath, modelType, modelTypeFriendlyName, datePropertyName, formType, customValidator=None, additionalDataGenerator=None):
@@ -45,3 +46,20 @@ def add_feedback(request):
     feedbackForByUser = Feedback.objects.filter(user_id=user.id)
     generator = lambda: (('feedback', feedbackForByUser),)
     return get_add_model_form(request, 'core/add_feedback.html', Feedback, 'Feedback', 'datetime', FeedbackForm, additionalDataGenerator=generator)
+
+
+def model_details(request, model, id):
+    modelInstance = None
+    url = None
+    if model.lower() == 'observation':
+        modelInstance = Observation.objects.get(observation_id=id)
+        url = 'observations/observation_details.html'
+    if modelInstance:
+        return _show_model_details(request, url, modelInstance)
+    return redirect('home')
+
+
+def _show_model_details(request, htmlURL, modelInstance):
+    data = {}
+    data['model'] = modelInstance
+    return render(request, htmlURL, data)

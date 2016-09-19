@@ -1,19 +1,25 @@
 @bb-blue: #162c65;
 @bb-green: #006a38;
+@main-color: #E2E2E2;
 
 .bb-blue-background {
-  background: @bb-blue
+  background: @main-color
 }
 
 .bb-green-background {
   background: @bb-green
 }
 
-.log-day-header h2 {
-  color: white;
+.log-day-header, h2 {
+  //color: white;
+  color: black;
+}
+.log-header {
+  //color: white;
+  color: black;
 }
 
-.log-day, .log-header {
+.log-day{
   color: white;
 }
 
@@ -85,7 +91,7 @@ body {
   overflow-x: hidden; /* Prevent scroll on narrow devices */
 }
 body {
-  padding-top: 70px;
+  padding-top: 51px;
 }
 footer {
   padding: 30px 0;
@@ -167,4 +173,9 @@ footer {
   }
 }
 
+@media (min-width: 768px) {
+  .container {
+    width: auto;
+  }
+}
 

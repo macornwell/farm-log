@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load farm_log_core_tags %}
+
+{% block nav-observation %}active{% endblock %}
+{% block body %}
+    <div class="container log col-xs-12 col-md-offset-3 col-md-6 bb-green-background">
+
+        <h1>Observation on {{ model.observation_date }}</h1>
+        <div class="row bb-blue-background log-header log-info">
+
+        <h4>Project</h4>
+        <div class="project">
+           {{ model.project }}
+        </div>
+        <h4>Affinity</h4>
+        <div class="affinity">
+            {{ model.affinity | get_full_affinity_state }}
+        </div>
+        <h4>Summary</h4>
+        <div class="summary">
+            {{ model.summary }}
+        </div>
+        <h4>Observation</h4>
+        <div class="observation">
+            <p>{{ model.observation}}</p>
+        </div>
+        </div>
+    </div>
+{% endblock %}

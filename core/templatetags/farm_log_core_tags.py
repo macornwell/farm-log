@@ -3,8 +3,13 @@ from django.core.urlresolvers import NoReverseMatch, reverse
 from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
 from core.utils import get_summary as coreGetSummary
+from core.models import get_affinity_state
 
 register = template.Library()
+
+@register.filter
+def get_full_affinity_state(affinity):
+    return get_affinity_state(affinity)
 
 @register.filter
 def get_time(dateTime):
@@ -24,7 +29,9 @@ def farm_log_login(request):
     except NoReverseMatch:
         return ''
 
-    snippet = "<li><a href='{href}?next={next}'>Log in</a></li>"
+    snippet = """<li role="presentation">
+                    <a class="btn btn-lg"  href='{href}?next={next}'>Log in</a></li>"
+                 </li>"""
     snippet = format_html(snippet, href=login_url, next=escape(request.path))
 
     return mark_safe(snippet)

@@ -9,6 +9,13 @@ AFFINITY_STATES = (
 )
 
 
+def get_affinity_state(abbreviated):
+    for abb, state in AFFINITY_STATES:
+        if abbreviated == abb:
+            return state
+    return None
+
+
 def get_objects_with_datetime_property_on_given_date(modelClass, date):
     return modelClass.objects.filter(datetime__year=date.year,
                                      datetime__month=date.month,
