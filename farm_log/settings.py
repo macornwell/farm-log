@@ -235,7 +235,7 @@ WEATHER_KEY = os.environ.get('WEATHER_KEY')
 
 WEATHER_DATA = {WEATHER_USERNAME: {
     'wunder_key': WEATHER_KEY or 'cc622998c566839f',
-    'url': WEATHER_URL or 'http://api.wunderground.com/api/cc622998c566839f/conditions/q/pws:KLACOVIN33.json'
+    'url': WEATHER_URL or 'http://api.wunderground.com/api/cc622998c566839f/conditions/q/pws:KLABUSH2.json'
 }}
 
 #############################
