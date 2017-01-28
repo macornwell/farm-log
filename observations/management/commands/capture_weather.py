@@ -21,6 +21,12 @@ from django.contrib.auth.models import User
 from django.core.management import BaseCommand
 from observations.settings import WEATHER_DATA
 from observations.models import WeatherReading
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
+import pytz
+from datetime import datetime
+
 
 
 WUNDERWEATHER_TO_WEATHER_STATE = {
@@ -59,15 +65,19 @@ class Command(BaseCommand):
             response = urllib.request.urlopen(url)
             stringResponse = response.readall().decode('utf-8')
             obj = json.loads(stringResponse)
-            current = obj['current_observation']
-            currentWeather = current['weather']
-            temp = current['temp_f']
-            weatherState = self.get_weather_state_for_wunderground_weather(currentWeather)
-            reading = WeatherReading()
-            reading.state = weatherState
-            reading.temperature = temp
-            reading.user = user
-            reading.save()
+
+            if self.__observation_date_is_valid(obj):
+                current = obj['current_observation']
+                currentWeather = current['weather']
+                temp = current['temp_f']
+                weatherState = self.get_weather_state_for_wunderground_weather(currentWeather)
+                reading = WeatherReading()
+                reading.state = weatherState
+                reading.temperature = temp
+                reading.user = user
+                reading.save()
+            else:
+                self.__send_observation_date_failed_email(obj)
 
     def get_weather_state_for_wunderground_weather(self, weather):
         state = 's'
@@ -80,6 +90,38 @@ class Command(BaseCommand):
                 state = 'n'
         return state
 
+
+    def __observation_date_is_valid(self, data):
+        return False
+        observedEpoch = int(data['local_epoch'])
+        observedDate = datetime.fromtimestamp(observedEpoch)
+        timezone = pytz.timezone('US/Central')
+        currentTime = datetime.datetime.now(timezone)
+        diff = currentTime - observedDate
+        if diff.days > 0:
+            return False
+        threeHours = 3*3600
+        secondsDifference = diff.seconds//3600
+
+        if secondsDifference > threeHours:
+            return False
+        return True
+
+
+    def __send_observation_date_failed_email(self, obj):
+        sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+        from_email = Email("no-reply@log.bonnieblueag.com")
+        subject = "Observed temperature could not be grabbed."
+        to_email = Email("mike@bonnieblueag.com")
+
+        rawContent = """
+        Current time: {0}
+        {1}
+        """.format(datetime.now(pytz.timezone('US/Central')), json.dumps(obj, sort_keys=True, indent=4))
+
+        content = Content("text/plain", rawContent)
+        mail = Mail(from_email, subject, to_email, content)
+        response = sg.client.mail.send.post(request_body=mail.get())
 
 
 
