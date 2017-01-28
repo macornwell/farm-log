@@ -92,7 +92,6 @@ class Command(BaseCommand):
 
 
     def __observation_date_is_valid(self, data):
-        return False
         observedEpoch = int(data['local_epoch'])
         observedDate = datetime.fromtimestamp(observedEpoch)
         timezone = pytz.timezone('US/Central')
