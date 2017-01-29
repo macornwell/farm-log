@@ -96,7 +96,7 @@ class Command(BaseCommand):
         observedEpoch = int(data['local_epoch'])
         observedDate = datetime.fromtimestamp(observedEpoch)
         timezone = pytz.timezone('US/Central')
-        currentTime = datetime.datetime.now(timezone)
+        currentTime = datetime.now(timezone)
         diff = currentTime - observedDate
         if diff.days > 0:
             return False
