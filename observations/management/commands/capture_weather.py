@@ -93,9 +93,9 @@ class Command(BaseCommand):
     def __observation_date_is_valid(self, data):
         if 'local_epoch' not in data:
             return False
-        observedEpoch = int(data['local_epoch'])
-        observedDate = datetime.fromtimestamp(observedEpoch)
         timezone = pytz.timezone('US/Central')
+        observedEpoch = int(data['local_epoch'])
+        observedDate = datetime.fromtimestamp(observedEpoch, timezone)
         currentTime = datetime.now(timezone)
         diff = currentTime - observedDate
         if diff.days > 0:
