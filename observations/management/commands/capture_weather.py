@@ -65,9 +65,8 @@ class Command(BaseCommand):
             response = urllib.request.urlopen(url)
             stringResponse = response.readall().decode('utf-8')
             obj = json.loads(stringResponse)
-
-            if self.__observation_date_is_valid(obj):
-                current = obj['current_observation']
+            current = obj['current_observation']
+            if self.__observation_date_is_valid(current):
                 currentWeather = current['weather']
                 temp = current['temp_f']
                 weatherState = self.get_weather_state_for_wunderground_weather(currentWeather)
@@ -77,7 +76,7 @@ class Command(BaseCommand):
                 reading.user = user
                 reading.save()
             else:
-                self.__send_observation_date_failed_email(obj)
+                self.__send_observation_date_failed_email(current)
 
     def get_weather_state_for_wunderground_weather(self, weather):
         state = 's'
@@ -92,6 +91,8 @@ class Command(BaseCommand):
 
 
     def __observation_date_is_valid(self, data):
+        if 'local_epoch' not in data:
+            return False
         observedEpoch = int(data['local_epoch'])
         observedDate = datetime.fromtimestamp(observedEpoch)
         timezone = pytz.timezone('US/Central')
