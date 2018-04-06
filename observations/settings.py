@@ -12,3 +12,4 @@ WEATHER_DATA = {'DJANGO_USERNAME':{
 
 default_data = {}
 WEATHER_DATA = getattr(settings, 'WEATHER_DATA', default_data)
+

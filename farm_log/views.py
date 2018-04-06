@@ -8,8 +8,6 @@ from observations.models import TemperatureReading, WeatherReading, Observation
 from work.models import WorkCompleted
 from livestock.models import EggCollection
 from plants.models import Harvest, Watering, Bloom, Resource, PlantProductivityReport
-from graphos.renderers.gchart import LineChart
-from graphos.sources.model import SimpleDataSource
 
 
 LOG_DAYS_PER_PAGE = 5
@@ -102,37 +100,3 @@ class WorkSummaryForDay:
     work_items = []
 
 
-
-
-"""
-UNDER CONSTRUCTION
-"""
-def _open_model_trend(request):
-
-    queryset = TemperatureReading.objects.all()
-    data =  [
-    ]
-    dateSeen = {}
-    for t in queryset:
-        day = t.datetime.day
-        month = t.datetime.month
-        year = t.datetime.year
-        if year in dateSeen:
-            if month in dateSeen[year]:
-                if day in dateSeen[year][month]:
-                    continue
-                else:
-                    dateSeen[year][month].append(day)
-            else:
-                dateSeen[year] = {month: [day,]}
-        else:
-            dateSeen[year] = {month: [day,]}
-
-        data.append([int(t.datetime.strftime('%Y%m%d')), float(t.value)])
-    data = sorted(data, key=lambda x: x[0])
-    data.insert(0, ['Date', 'Value'])
-    chart = LineChart(SimpleDataSource(data=data), html_id="line_chart")
-    data = {'chart': chart}
-    s = chart.as_html()
-
-    return render(template_name='model_popup.html', context=data, request=request)

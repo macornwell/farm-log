@@ -5,6 +5,7 @@ from django.contrib.auth.views import login
 from farm_log import settings
 from farm_log.views import home, home_with_page, worksite
 from rest_framework import routers
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
 import core.urls as CoreUrls
 import observations.urls as ObservationUrls
 import work.urls as WorkUrls
@@ -37,7 +38,9 @@ urlpatterns += PlantsUrls.urlpatterns
 urlpatterns += [
     url(r'^api/', include(router.urls), name='api'),
     #url(r'^api/log_message', post_log_messages_json, name='log_message'),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/v1/auth/token/$', obtain_jwt_token),
+    url(r'^api/v1/auth/token/verify/$', verify_jwt_token),
+    url(r'^api/v1/auth/token/refresh/$', refresh_jwt_token),
 ]
 
